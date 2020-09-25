@@ -1,47 +1,53 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * Simple brute force implementation
- *
  */
 public class ReadSymptomDataFromFile implements ISymptomReader {
 
-	private String filepath;
-	
-	/**
-	 * 
-	 * @param filepath a full or partial path to file with symptom strings in it, one per line
-	 */
-	public ReadSymptomDataFromFile (String filepath) {
-		this.filepath = filepath;
-	}
-	
-	@Override
-	public List<String> GetSymptoms() {
-		ArrayList<String> result = new ArrayList<String>();
-		
-		if (filepath != null) {
-			try {
-				BufferedReader reader = new BufferedReader (new FileReader(filepath));
-				String line = reader.readLine();
-				
-				while (line != null) {
-					result.add(line);
-					line = reader.readLine();
-				}
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
-	}
+
+    @Override
+    public List<String> GetSymptoms() {
+        List<String> lines = null;
+        try {
+            //get file from  project
+            File file = new File(getNameFileSymptoms());
+            // check if file exist
+            if (file.exists()) {
+                lines = Files.readAllLines(file.toPath());
+            }
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
+
+    @Override
+    public String getNameFileSymptoms() throws IOException {
+        String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
+        if (rootPath != null) {
+
+            String appConfigPath = rootPath + "/resources/application.properties";
+
+            Properties appProps = new Properties();
+            appProps.load(new FileInputStream(appConfigPath));
+            return appProps.getProperty("name.input.file");
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public Set<String> getDistinctSymptoms(List<String> list) {
+        return new TreeSet<>(list);
+    }
+
 
 }
+
+
