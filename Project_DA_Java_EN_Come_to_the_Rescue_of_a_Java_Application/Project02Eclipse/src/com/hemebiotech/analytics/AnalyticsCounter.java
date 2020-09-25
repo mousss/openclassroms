@@ -7,11 +7,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class AnalyticsCounter {
-    private static final String nameFile = "Project02Eclipse/symptoms.txt";
+    private static final String nameFile = "Project_DA_Java_EN_Come_to_the_Rescue_of_a_Java_Application/Project02Eclipse/symptoms.txt";
 
     public static void main(String[] args) throws IOException {
         // out put file
-        FileWriter writer = new FileWriter("Project02Eclipse/result.out");
+        FileWriter writer = new FileWriter("result.out");
         try {
             //get file from  project
             File file = new File(nameFile);
